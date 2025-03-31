@@ -3,103 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rock Paper Scissors - Ultimate Edition</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <title>QR Code Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
-        body { 
-            background: linear-gradient(135deg, #000428, #004e92);
-            color: white;
-            text-align: center;
-            font-family: 'Orbitron', sans-serif;
-        }
-        .container { margin-top: 50px; }
-        .choice-btn {
-            font-size: 28px;
-            padding: 20px 40px;
-            margin: 15px;
-            border-radius: 50px;
-            border: none;
-            transition: 0.3s;
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #3b82f6, #1e3a8a);
+            font-family: 'Poppins', sans-serif;
         }
         
-        .choice-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
-        }
-        #status {
-            font-size: 120px;
-            margin-top: 30px;
-            font-weight: bold;
-            animation: glow 1.5s infinite alternate;
-        }
-        #result {
-            font-size: 36px;
-            margin-top: 20px;
-            font-weight: bold;
-        }
-        @keyframes glow {
-            from { text-shadow: 0 0 10px white; }
-            to { text-shadow: 0 0 30px cyan; }
-        }
-        .game-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+        .box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: white;
             padding: 30px;
+            border-radius: 20px;
+            box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 600px;
+            transition: 0.3s ease-in-out;
+        }
+        
+        .box:hover {
+            transform: scale(1.02);
+            box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            transition: 0.3s ease-in-out;
+        }
+
+        input:focus {
+            border: 1px solid #007bff;
+            box-shadow: 0px 0px 10px rgba(0, 123, 255, 0.3);
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            background: #007bff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        #qrcode {
+            margin-top: 20px;
+            padding: 10px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
         }
     </style>
 </head>
 <body>
-    <div class="container text-center">
-        <h1 class="display-3 text-uppercase fw-bold">🔥 Rock Paper Scissors 🔥</h1>
-        <div class="d-flex justify-content-center mt-4">
-            <button class="btn btn-danger choice-btn" onclick="choose('rock')">🗿 Rock</button>
-            <button class="btn btn-warning choice-btn" onclick="choose('paper')">📄 Paper</button>
-            <button class="btn btn-primary choice-btn" onclick="choose('scissors')">✂️ Scissors</button>
-        </div>
-        <div class="game-card mt-5">
-            <p id="status">🤖</p>
-            <p id="result"></p>
-        </div>
-    </div>
-    <script>
-        let playerChoice = '';
-        let interval;
-        const movingChoices = ['🗿', '📄', '✂️'];
-        
-        function choose(choice) {
-            playerChoice = choice;
-            let index = 0;
-            interval = setInterval(() => {
-                document.getElementById('status').innerText = movingChoices[index];
-                index = (index + 1) % movingChoices.length;
-            }, 150);
-            setTimeout(playGame, 4000);
+
+<div class="box">
+    <h2 class="fw-bold text-primary">🔳 QR Code Generator with AI Chatbot.</h2>
+    <input type="text" id="text" class="form-control" placeholder="Enter text or URL">
+    <button onclick="generateQR()">Generate QR Code</button>
+    <div id="qrcode"></div>
+    <p id="cat"></p>
+    <p>Note: Use private network, sometimes it will not work on wifi due to college restrictions.</p>
+</div>
+
+<script>
+    function generateQR() {
+        let text = document.getElementById("text").value.trim();
+        let qrDiv = document.getElementById("qrcode");
+
+        if (!text) {
+            alert("Please enter text!");
+            return;
         }
-        
-        function playGame() {
-            clearInterval(interval);
-            const choices = ['rock', 'paper', 'scissors'];
-            const computerChoice = choices[Math.floor(Math.random() * 3)];
-            let result = '';
-            
-            if (playerChoice === computerChoice) {
-                result = '⚡ It\'s a Draw! ⚡';
-            } else if (
-                (playerChoice === 'rock' && computerChoice === 'scissors') ||
-                (playerChoice === 'scissors' && computerChoice === 'paper') ||
-                (playerChoice === 'paper' && computerChoice === 'rock')
-            ) {
-                result = '🔥 You Win! 🔥';
-            } else {
-                result = '💀 You Lose! 💀';
-            }
-            
-            document.getElementById('status').innerText = `🤖 ${computerChoice.toUpperCase()}`;
-            document.getElementById('result').innerText = result;
-        }
+
+        qrDiv.innerHTML = ""; 
+        new QRCode(qrDiv, text);
+
+        qrDiv.style.opacity = "0";
+        setTimeout(() => qrDiv.style.opacity = "1", 200);
+        let cat = document.getElementById("cat");
+        cat.innerHTML = "Scan and use..."
+    }
+</script>
+<script>
+    (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="VDngpRlJ3Ps6hnPo_Txiq";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
     </script>
 </body>
 </html>
